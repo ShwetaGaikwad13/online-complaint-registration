@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
-const connectDB = require('./config/db');
+const connectDB = require('./server/config/db')
 const errorHandler = require('./middleware/errorMiddleware');
 
 const app = express();
