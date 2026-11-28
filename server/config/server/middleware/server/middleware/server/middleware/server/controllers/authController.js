@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../../../../../../../../server/server/config/server/models/User');
 const Agent = require('../../../../../../../../server/server/config/server/models/Agent');
-```[cite: 1, 2, 7]
+
 const signToken = (id, role) =>
   jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
@@ -46,14 +46,14 @@ exports.register = async (req, res, next) => {
 exports.login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email: email.toLowerCase() });
 
+    const user = await User.findOne({ email: email.toLowerCase() });
     if (!user || !(await bcrypt.compare(password, user.password))) {
       res.status(401);
       throw new Error('Invalid email or password');
     }
 
-    res.json({
+    res.status(200).json({
       token: signToken(user._id, user.role),
       user: { id: user._id, name: user.name, email: user.email, role: user.role },
     });
@@ -62,10 +62,24 @@ exports.login = async (req, res, next) => {
   }
 };
 
-exports.logout = async (req, res) => {
-  res.json({ message: 'Logged out successfully' });
+exports.logout = async (req, res, next) => {
+  try {
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (err) {
+    next(err);
+  }
 };
 
-exports.getProfile = async (req, res) => {
-  res.json(req.user);
+exports.getProfile = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password');
+    if (!user) {
+      res.status(404);
+      throw new Error('User not found');
+    }
+
+    res.status(200).json({ user });
+  } catch (err) {
+    next(err);
+  }
 };
