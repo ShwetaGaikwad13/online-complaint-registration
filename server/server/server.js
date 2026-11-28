@@ -3,7 +3,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const connectDB = require('./server/config/db')
-const errorHandler = require('./middleware/errorMiddleware');
+const errorMiddleware = require('../config/server/middleware/server/middleware/server/middleware/errorMiddleware');
 
 const app = express();
 
