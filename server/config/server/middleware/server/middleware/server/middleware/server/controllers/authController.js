@@ -1,8 +1,8 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const User = require('../models/User');
-const Agent = require('../models/Agent');
-
+const User = require('../../../../../../../../server/server/config/server/models/User');
+const Agent = require('../../../../../../../../server/server/config/server/models/Agent');
+```[cite: 1, 2, 7]
 const signToken = (id, role) =>
   jwt.sign({ id, role }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
